@@ -23,6 +23,6 @@ Using staging tables, we are able to create a star schema in Redshift with the f
 With them, the next step is to run ```etl.py``` to read JSON files, process data and write into the tables above.
 
 ## Star Schema
-![Entity Relationship Diagram (3)](https://user-images.githubusercontent.com/49285727/198907964-f840ff40-079e-4e3f-ae3b-a07d64f70dd8.jpg)
+![Entity Relationship Diagram (3)](https://github.com/leonardodrigo/udacity-cloud-datawarehouse/blob/main/songplays.jpg))
 
 
