@@ -95,8 +95,8 @@ artist_table_create = ("""
         artist_id VARCHAR PRIMARY KEY,
         name VARCHAR,
         location VARCHAR,
-        latitude VARCHAR,
-        longitude VARCHAR
+        latitude FLOAT,
+        longitude FLOAT
     ) DISTKEY(artist_id) SORTKEY(artist_id);
 """)
 
@@ -135,7 +135,7 @@ staging_songs_copy = ("""
 songplay_table_insert = ("""
     INSERT INTO public.songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
         SELECT
-              DISTINCT(DATEADD(s, evt.ts/1000, '20000101')) AS start_time
+              DATEADD(s, evt.ts/1000, '20000101') AS start_time
             , evt.user_id
             , evt.level
             , sng.song_id
@@ -148,6 +148,7 @@ songplay_table_insert = ("""
         LEFT JOIN public.staging_songs sng
             ON evt.song = sng.title
             AND evt.artist = sng.artist_name
+            AND evt.length = sng.duration
         WHERE
             evt.page = 'NextSong'
 """)
@@ -164,6 +165,7 @@ user_table_insert = ("""
             public.staging_events
         WHERE
             user_id IS NOT NULL
+            AND page = 'NextSong'
 """)
 
 song_table_insert = ("""
@@ -193,7 +195,7 @@ artist_table_insert = ("""
 time_table_insert = ("""
     INSERT INTO public.time (start_time, hour, day, week, month, year, weekday)
         SELECT 
-              DISTINCT(DATEADD(s, ts/1000, '20000101')) AS start_time
+              DISTINCT start_time
             , EXTRACT(hour from start_time) AS hour
             , EXTRACT(day from start_time) AS day
             , EXTRACT(week from start_time) AS week
@@ -201,7 +203,7 @@ time_table_insert = ("""
             , EXTRACT(year from start_time) AS year
             , EXTRACT(weekday from start_time) AS weekday
         FROM 
-            public.staging_events
+            public.songplays
 """)
 
 # QUERY LISTS
