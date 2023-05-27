@@ -4,12 +4,18 @@ from sql_queries import create_table_queries, drop_table_queries
 
 
 def drop_tables(cur, conn):
+    ''' 
+    Dropping tables from Redshift to recalculate them and avoid duplicated rows.
+    '''
     for query in drop_table_queries:
         cur.execute(query)
         conn.commit()
 
 
 def create_tables(cur, conn):
+    '''
+    Creating all tables that we need for our model, including stages (S3 JSON files), dimensions and fact tables.
+    '''
     for query in create_table_queries:
         cur.execute(query)
         conn.commit()

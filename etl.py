@@ -4,12 +4,18 @@ from sql_queries import copy_table_queries, insert_table_queries
 
 
 def load_staging_tables(cur, conn):
+    '''
+    Copying JSON files from S3 into staging tables in Redshift: staging_events and staging_songs.
+    '''
     for query in copy_table_queries:
         cur.execute(query)
         conn.commit()
 
 
 def insert_tables(cur, conn):
+    '''
+    Organizing and inserting data from stage into star schema model tables.
+    '''
     for query in insert_table_queries:
         cur.execute(query)
         conn.commit()
